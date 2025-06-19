@@ -629,7 +629,7 @@
                         <span v-show="!isMinimized" class="ml-3">Products</span>
                     </Link>
 
-                    <div
+                    <!-- <div
                         v-if="
                             hasPermission('read customers') ||
                             hasPermission('read agents')
@@ -666,7 +666,7 @@
                         <span v-show="!isMinimized" class="ml-3"
                             >Customers</span
                         >
-                    </Link>
+                    </Link> -->
 
                     <!-- <Link
                         v-if="hasPermission('read advertisements')"

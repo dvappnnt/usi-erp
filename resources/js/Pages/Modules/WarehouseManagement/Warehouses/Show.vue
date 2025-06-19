@@ -577,9 +577,9 @@ onMounted(() => {
                                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Stock
                                             </th>
-                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <!-- <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Selling Price
-                                            </th>
+                                            </th> -->
                                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Last Cost
                                             </th>
@@ -643,11 +643,11 @@ onMounted(() => {
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td class="px-3 py-2">
+                                            <!-- <td class="px-3 py-2">
                                                 <div class="text-sm text-gray-900">
                                                     {{ formatNumber(product.price, { style: 'currency', currency: 'PHP' }) }}
                                                 </div>
-                                            </td>
+                                            </td> -->
                                             <td class="px-3 py-2">
                                                 <div class="text-sm text-gray-900">
                                                     {{ formatNumber(product.last_cost, { style: 'currency', currency: 'PHP' }) }}
