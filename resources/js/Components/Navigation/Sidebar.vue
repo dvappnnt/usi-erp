@@ -425,6 +425,103 @@
                             >Purchase Orders</span
                         >
                     </Link>
+                    <Link
+                        v-if="hasPermission('read requisition vouchers')"
+                        :href="route('purchase-requests.index')"
+                        :class="[
+                            'flex items-center px-4 py-2 rounded-lg transition-colors',
+                            route().current()?.startsWith('purchase-requests.')
+                                ? 'active-link'
+                                : 'hover:bg-gray-100',
+                        ]"
+                        :style="
+                            route().current()?.startsWith('purchase-requests.')
+                                ? activeStyles
+                                : sidebarTextStyle
+                        "
+                    >
+                        <span
+                            class="mdi mdi-file-document-multiple text-xl"
+                            :style="
+                                route()
+                                    .current()
+                                    ?.startsWith('purchase-requests.')
+                                    ? { color: activeTextColor }
+                                    : sidebarTextStyle
+                            "
+                        ></span>
+                        <span v-show="!isMinimized" class="ml-3"
+                            >Purchase Request</span
+                        >
+                    </Link>
+
+                    <Link
+                        v-if="hasPermission('read requisition vouchers')"
+                        :href="route('requisition-vouchers.index')"
+                        :class="[
+                            'flex items-center px-4 py-2 rounded-lg transition-colors',
+                            route()
+                                .current()
+                                ?.startsWith('requisition-vouchers.')
+                                ? 'active-link'
+                                : 'hover:bg-gray-100',
+                        ]"
+                        :style="
+                            route()
+                                .current()
+                                ?.startsWith('requisition-vouchers.')
+                                ? activeStyles
+                                : sidebarTextStyle
+                        "
+                    >
+                        <span
+                            class="mdi mdi-file-document-multiple text-xl"
+                            :style="
+                                route()
+                                    .current()
+                                    ?.startsWith('requisition-vouchers.')
+                                    ? { color: activeTextColor }
+                                    : sidebarTextStyle
+                            "
+                        ></span>
+                        <span v-show="!isMinimized" class="ml-3"
+                            >Requisition Vouchers</span
+                        >
+                    </Link>
+
+                    <!-- <Link
+                        v-if="hasPermission('read purchase Request')"
+                        :href="route('purchase-request.index')"
+                        :class="[
+                            'flex items-center px-4 py-2 rounded-lg transition-colors',
+                            route()
+                                .current()
+                                ?.startsWith('purchase-request.')
+                                ? 'active-link'
+                                : 'hover:bg-gray-100',
+                        ]"
+                        :style="
+                            route()
+                                .current()
+                                ?.startsWith('purchase-request.')
+                                ? activeStyles
+                                : sidebarTextStyle
+                        "
+                    >
+                        <span
+                            class="mdi mdi-file-document-multiple text-xl"
+                            :style="
+                                route()
+                                    .current()
+                                    ?.startsWith('purchase-request.')
+                                    ? { color: activeTextColor }
+                                    : sidebarTextStyle
+                            "
+                        ></span>
+                        <span v-show="!isMinimized" class="ml-3"
+                            >Purchase Request</span
+                        >
+                    </Link> -->
 
                     <!-- <Link
                         :href="route('purchase-requisitions.index')"
@@ -1153,6 +1250,33 @@
                         ></span>
                         <span v-show="!isMinimized" class="ml-3"
                             >Activity Logs</span
+                        >
+                    </Link>
+                     <Link
+                        v-if="hasPermission('read signatories')"
+                        :href="route('signatories.index')"
+                        :class="[
+                            'flex items-center px-4 py-2 rounded-lg transition-colors',
+                            route().current()?.startsWith('signatories.')
+                                ? 'active-link'
+                                : 'hover:bg-gray-100',
+                        ]"
+                        :style="
+                            route().current()?.startsWith('signatories.')
+                                ? activeStyles
+                                : sidebarTextStyle
+                        "
+                    >
+                        <span
+                            class="mdi mdi-history text-xl"
+                            :style="
+                                route().current()?.startsWith('signatories.')
+                                    ? { color: activeTextColor }
+                                    : sidebarTextStyle
+                            "
+                        ></span>
+                        <span v-show="!isMinimized" class="ml-3"
+                            >Signatiories</span
                         >
                     </Link>
 

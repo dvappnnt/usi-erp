@@ -15,7 +15,10 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $this->createSystemRoles();
+        $this->createRequisitionVoucherPermissions();
+        $this->createPurchaseRequestPermissions();
         $this->assignSuperAdminPermissions();
+        $this->createSignatoriesPermissions();
     }
 
     /**
@@ -167,6 +170,68 @@ class RoleSeeder extends Seeder
                 'update journal entry details',
                 'delete journal entry details',
                 'restore journal entry details',
+                'create requisition vouchers',
+                'read requisition vouchers',
+                'update requisition vouchers',
+                'delete requisition vouchers',
+                'restore requisition vouchers',
+                'create purchase requests',
+                'read purchase requests',
+                'update purchase requests',
+                'delete purchase requests',
+                'restore purchase requests',
+
+            ]);
+        }
+    }
+    private function createRequisitionVoucherPermissions(): void
+    {
+        $permissions = [
+            'create requisition vouchers',
+            'read requisition vouchers',
+            'update requisition vouchers',
+            'delete requisition vouchers',
+            'restore requisition vouchers',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+    private function createPurchaseRequestPermissions(): void
+    {
+        $permissions = [
+            'create purchase requests',
+            'read purchase requests',
+            'update purchase requests',
+            'delete purchase requests',
+            'restore purchase requests',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+    private function createSignatoriesPermissions(): void
+    {
+        $permissions = [
+            'create signatories',
+            'read signatories',
+            'update signatories',
+            'delete signatories',
+            'restore signatories',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
             ]);
         }
     }

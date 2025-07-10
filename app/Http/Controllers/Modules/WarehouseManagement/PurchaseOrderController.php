@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Modules\WarehouseManagement;
 
 use App\Http\Controllers\Controller;
+use App\Models\PurchaseOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -30,14 +31,71 @@ class PurchaseOrderController extends Controller
         return Inertia::render("{$this->modulePath}/{$this->modelName}/Create");
     }
 
+    // public function show($id)
+    // {
+    //     $model = $this->modelClass::with(['company', 'warehouse', 'supplier'])->findOrFail($id);
+
+    //     return Inertia::render("{$this->modulePath}/{$this->modelName}/Show", [
+    //         'modelData' => $model,
+    //     ]);
+    // }
+    // public function show($id)
+    // {
+    //     $model = $this->modelClass::with([
+    //         'company',
+    //         'warehouse',
+    //         'supplier.purchaseRequests.items.product', // include connected purchase requests
+    //     ])->findOrFail($id);
+
+    //     return Inertia::render("{$this->modulePath}/{$this->modelName}/Show", [
+    //         'modelData' => $model,
+    //     ]);
+    // }
     public function show($id)
     {
-        $model = $this->modelClass::with(['company', 'warehouse', 'supplier'])->findOrFail($id);
+        $model = $this->modelClass::with([
+            'company',
+            'warehouse',
+            'purchaseRequests.items.product',
+            'supplier.purchaseRequests' => function ($query) {
+                // Only fetch PRs not yet linked to a PO
+                $query->whereDoesntHave('purchaseOrders');
+            },
+            'supplier.purchaseRequests.items.product',
+        ])->findOrFail($id);
 
         return Inertia::render("{$this->modulePath}/{$this->modelName}/Show", [
             'modelData' => $model,
         ]);
     }
+    public function attachPurchaseRequest(Request $request, $purchaseOrderId)
+    {
+        $request->validate([
+            'purchase_request_id' => 'required|exists:purchase_requests,id',
+        ]);
+
+        $purchaseOrder = PurchaseOrder::findOrFail($purchaseOrderId);
+
+        // Attach the PR
+        $purchaseOrder->purchaseRequests()->attach($request->purchase_request_id);
+
+        return response()->json(['message' => 'Purchase Request attached successfully.']);
+    }
+    public function detachPurchaseRequest(Request $request, $purchaseOrderId)
+    {
+        $request->validate([
+            'purchase_request_id' => 'required|exists:purchase_requests,id',
+        ]);
+
+        $purchaseOrder = PurchaseOrder::findOrFail($purchaseOrderId);
+
+        // Detach the PR
+        $purchaseOrder->purchaseRequests()->detach($request->purchase_request_id);
+
+        return response()->json(['message' => 'Purchase Request detached successfully.']);
+    }
+
+
 
     public function edit($id)
     {
@@ -62,7 +120,7 @@ class PurchaseOrderController extends Controller
             'details.supplierProductDetail.product',
             'details.supplierProductDetail.variation',
         ])->findOrFail($id);
-    
+
         return Inertia::render("{$this->modulePath}/{$this->modelName}/Print", [
             'modelData' => $purchaseOrder,
             'purchaseOrderDetails' => $purchaseOrder->details,

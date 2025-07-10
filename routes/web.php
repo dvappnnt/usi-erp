@@ -51,6 +51,9 @@ use App\Http\Controllers\Modules\HumanResourceManagement\EmployeeLeaveController
 use App\Http\Controllers\Modules\HumanResourceManagement\EmployeeOvertimeController;
 use App\Http\Controllers\Modules\HumanResourceManagement\DeductionController;
 use App\Http\Controllers\Modules\HumanResourceManagement\DocumentTypeController;
+use App\Http\Controllers\Modules\RequisitionManagement\RequisitionVoucherController;
+use App\Http\Controllers\PurchaseRequestController;
+use App\Http\Controllers\SignatoryController;
 
 Route::get('/', function () {
     // return Inertia::render('Welcome', [
@@ -68,6 +71,44 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/requisition-vouchers', [RequisitionVoucherController::class, 'index'])->name('requisition-vouchers.index');
+    Route::get('/requisition-vouchers/create', [RequisitionVoucherController::class, 'create'])
+        ->name('requisition-vouchers.create');
+    Route::post('/requisition-vouchers', [RequisitionVoucherController::class, 'store'])
+        ->name('requisition-vouchers.store');
+    Route::get('/requisition-vouchers/{id}/edit', [RequisitionVoucherController::class, 'edit'])
+        ->name('requisition-vouchers.edit');
+    Route::put('/requisition-vouchers/{id}', [RequisitionVoucherController::class, 'update'])
+        ->name('requisition-vouchers.update');
+    Route::delete('/requisition-vouchers/{id}', [RequisitionVoucherController::class, 'destroy'])
+        ->name('requisition-vouchers.destroy');
+
+
+    Route::get('/purchase-requests', [PurchaseRequestController::class, 'index'])->name('purchase-requests.index');
+    Route::get('/purchase-requests/create', [PurchaseRequestController::class, 'create'])
+        ->name('purchase-requests.create');
+    Route::post('/purchase-requests', [PurchaseRequestController::class, 'store'])
+        ->name('purchase-requests.store');
+    Route::get('/purchase-requests/{id}/edit', [PurchaseRequestController::class, 'edit'])
+        ->name('purchase-requests.edit');
+    Route::put('/purchase-requests/{id}', [PurchaseRequestController::class, 'update'])
+        ->name('purchase-requests.update');
+    Route::delete('/purchase-requests/{id}', [PurchaseRequestController::class, 'destroy'])
+        ->name('purchase-requests.destroy');
+// Signatories
+    Route::get('/signatories', [SignatoryController::class, 'index'])->name('signatories.index');
+    Route::get('/signatories/create', [SignatoryController::class, 'create'])
+        ->name('signatories.create');
+    Route::post('/signatories', [SignatoryController::class, 'store'])
+        ->name('signatories.store');
+    Route::get('/signatories/{id}/edit', [SignatoryController::class, 'edit'])
+        ->name('signatories.edit');
+    Route::put('/signatories/{id}', [SignatoryController::class, 'update'])
+        ->name('signatories.update');
+    Route::delete('/signatories/{id}', [SignatoryController::class, 'destroy'])
+        ->name('signatories.destroy');
+
 
     Route::get('/pos', [PosController::class, 'index'])->name('pos');
 
@@ -96,7 +137,7 @@ Route::middleware([
     Route::get('supplier-invoices/export', [SupplierInvoiceController::class, 'export'])->name('supplier-invoices.export');
     Route::resource('supplier-invoices', SupplierInvoiceController::class)->only(['index', 'show', 'edit', 'create']);
     Route::get('supplier-invoices/{supplierInvoice}/print', [SupplierInvoiceController::class, 'print'])->name('supplier-invoices.print');
-    
+
     Route::get('expenses/export', [ExpenseController::class, 'export'])->name('expenses.export');
     Route::resource('expenses', ExpenseController::class)->only(['index', 'show', 'edit', 'create']);
 
@@ -120,8 +161,11 @@ Route::middleware([
     Route::resource('categories', CategoryController::class)->only(['index', 'show', 'edit', 'create']);
 
     Route::get('purchase-orders/export', [PurchaseOrderController::class, 'export'])->name('purchase-orders.export');
+    Route::post('purchase-orders/{purchaseOrder}/attach-purchase-request', [PurchaseOrderController::class, 'attachPurchaseRequest'])->name('purchase-orders.attach-purchase-request');
+    Route::post('purchase-orders/{purchaseOrder}/detach-purchase-request', [PurchaseOrderController::class, 'detachPurchaseRequest'])->name('purchase-orders.detach-purchase-request');
+
     Route::resource('purchase-orders', PurchaseOrderController::class)->only(['index', 'show', 'edit', 'create']);
-    
+
     Route::resource('projects', ProjectController::class)->only(['index', 'show', 'edit', 'create']);
     Route::resource('tasks', ProjectTaskController::class)->only(['index', 'show', 'edit', 'create']);
 
