@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbstractOfCanvassController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -96,7 +97,7 @@ Route::middleware([
         ->name('purchase-requests.update');
     Route::delete('/purchase-requests/{id}', [PurchaseRequestController::class, 'destroy'])
         ->name('purchase-requests.destroy');
-// Signatories
+    // Signatories
     Route::get('/signatories', [SignatoryController::class, 'index'])->name('signatories.index');
     Route::get('/signatories/create', [SignatoryController::class, 'create'])
         ->name('signatories.create');
@@ -108,6 +109,10 @@ Route::middleware([
         ->name('signatories.update');
     Route::delete('/signatories/{id}', [SignatoryController::class, 'destroy'])
         ->name('signatories.destroy');
+
+
+    Route::resource('aocs', AbstractOfCanvassController::class);
+
 
 
     Route::get('/pos', [PosController::class, 'index'])->name('pos');

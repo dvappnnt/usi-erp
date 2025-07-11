@@ -384,6 +384,9 @@
                         v-if="
                             hasPermission('read companies') ||
                             hasPermission('read purchase orders') ||
+                            hasPermission('read purchase requests') ||
+                              hasPermission('read abstract of canvass') ||
+                            hasPermission('read requisition vouchers') ||
                             hasPermission('read goods receipts') ||
                             hasPermission('read warehouses') ||
                             hasPermission('read suppliers') ||
@@ -426,7 +429,35 @@
                         >
                     </Link>
                     <Link
-                        v-if="hasPermission('read requisition vouchers')"
+                        v-if="hasPermission('read abstract of canvasses')"
+                        :href="route('aocs.index')"
+                        :class="[
+                            'flex items-center px-4 py-2 rounded-lg transition-colors',
+                            route().current()?.startsWith('aocs.')
+                                ? 'active-link'
+                                : 'hover:bg-gray-100',
+                        ]"
+                        :style="
+                            route().current()?.startsWith('aocs.')
+                                ? activeStyles
+                                : sidebarTextStyle
+                        "
+                    >
+                        <span
+                            class="mdi mdi-clipboard-text-multiple-outline text-xl"
+                            :style="
+                                route().current()?.startsWith('aocs.')
+                                    ? { color: activeTextColor }
+                                    : sidebarTextStyle
+                            "
+                        ></span>
+                        <span v-show="!isMinimized" class="ml-3">
+                            Abstract of Canvass
+                        </span>
+                    </Link>
+
+                    <Link
+                        v-if="hasPermission('read purchase requests')"
                         :href="route('purchase-requests.index')"
                         :class="[
                             'flex items-center px-4 py-2 rounded-lg transition-colors',
@@ -1252,7 +1283,7 @@
                             >Activity Logs</span
                         >
                     </Link>
-                     <Link
+                    <Link
                         v-if="hasPermission('read signatories')"
                         :href="route('signatories.index')"
                         :class="[

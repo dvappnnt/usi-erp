@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AbstractOfCanvassApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -89,6 +90,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return $request->user();
     });
 });
+Route::get('/aocs', [AbstractOfCanvassApiController::class, 'index']);
 
 Route::get('/all/countries', [CountryController::class, 'all'])->name('api.countries.all');
 Route::resource('countries', CountryController::class)->only(['index', 'show', 'destroy']);

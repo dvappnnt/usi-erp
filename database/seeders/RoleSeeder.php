@@ -19,6 +19,7 @@ class RoleSeeder extends Seeder
         $this->createPurchaseRequestPermissions();
         $this->assignSuperAdminPermissions();
         $this->createSignatoriesPermissions();
+        $this->createAocsPermissions();
     }
 
     /**
@@ -226,6 +227,28 @@ class RoleSeeder extends Seeder
             'update signatories',
             'delete signatories',
             'restore signatories',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+    private function createAocsPermissions(): void
+    {
+        $permissions = [
+            'create abstract of canvasses',
+            'read abstract of canvasses',
+            'update abstract of canvasses',
+            'delete abstract of canvasses',
+            'restore abstract of canvasses',
+            'create abstract of canvass items',
+            'read abstract of canvass items',
+            'update abstract of canvass items',
+            'delete abstract of canvass items',
+            'restore abstract of canvass items',
         ];
 
         foreach ($permissions as $permission) {
