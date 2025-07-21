@@ -52,11 +52,11 @@ class Supplier extends Model
     {
         static::addGlobalScope('company_filter', function (Builder $builder) {
             $user = Auth::user();
-    
+
             if ($user && !$user->hasRole('super-admin')) {
                 $builder->where(function ($query) use ($user) {
                     $query->where('company_id', $user->company_id)
-                          ->orWhereNull('company_id');
+                        ->orWhereNull('company_id');
                 });
             }
         });
@@ -101,4 +101,12 @@ class Supplier extends Model
     {
         return $this->hasMany(SupplierProductVariation::class);
     }
+    public function supplierProductDetails()
+    {
+        return $this->hasMany(SupplierProductDetail::class);
+    }
+    public function purchaseRequests()
+{
+    return $this->hasMany(PurchaseRequest::class);
+}
 }

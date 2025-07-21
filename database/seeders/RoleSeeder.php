@@ -15,7 +15,12 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $this->createSystemRoles();
+        $this->createRequisitionVoucherPermissions();
+        $this->createPurchaseRequestPermissions();
         $this->assignSuperAdminPermissions();
+        $this->createSignatoriesPermissions();
+        $this->createAocsPermissions();
+        $this->createRfqPermissions();
     }
 
     /**
@@ -167,7 +172,116 @@ class RoleSeeder extends Seeder
                 'update journal entry details',
                 'delete journal entry details',
                 'restore journal entry details',
+                'create requisition vouchers',
+                'read requisition vouchers',
+                'update requisition vouchers',
+                'delete requisition vouchers',
+                'restore requisition vouchers',
+                'create purchase requests',
+                'read purchase requests',
+                'update purchase requests',
+                'delete purchase requests',
+                'restore purchase requests',
+
             ]);
         }
     }
+    private function createRequisitionVoucherPermissions(): void
+    {
+        $permissions = [
+            'create requisition vouchers',
+            'read requisition vouchers',
+            'update requisition vouchers',
+            'delete requisition vouchers',
+            'restore requisition vouchers',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+    private function createPurchaseRequestPermissions(): void
+    {
+        $permissions = [
+            'create purchase requests',
+            'read purchase requests',
+            'update purchase requests',
+            'delete purchase requests',
+            'restore purchase requests',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+    private function createSignatoriesPermissions(): void
+    {
+        $permissions = [
+            'create signatories',
+            'read signatories',
+            'update signatories',
+            'delete signatories',
+            'restore signatories',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+    private function createAocsPermissions(): void
+    {
+        $permissions = [
+            'create abstract of canvasses',
+            'read abstract of canvasses',
+            'update abstract of canvasses',
+            'delete abstract of canvasses',
+            'restore abstract of canvasses',
+            'create abstract of canvass items',
+            'read abstract of canvass items',
+            'update abstract of canvass items',
+            'delete abstract of canvass items',
+            'restore abstract of canvass items',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+    private function createRfqPermissions(): void
+    {
+        $permissions = [
+                'read rfqs',
+                'create rfqs',
+                'update rfqs',
+                'delete rfqs',
+                'restore rfqs',
+                'read rfq items',
+                'create rfq items',
+                'update rfq items',
+                'delete rfq items',
+                'restore rfq items',
+                
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+     
+    
 }

@@ -204,4 +204,11 @@ class PurchaseOrder extends Model
     {
         return $this->hasMany(ApprovalLevel::class);
     }
+    public function purchaseRequests()
+{
+    return $this->belongsToMany(PurchaseRequest::class)
+                ->using(PurchaseOrderPurchaseRequest::class) // Use pivot model
+                ->withTimestamps();
+}
+
 }

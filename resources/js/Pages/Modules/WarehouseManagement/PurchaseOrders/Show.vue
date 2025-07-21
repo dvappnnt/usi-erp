@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import HeaderActions from "@/Components/HeaderActions.vue";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import moment from "moment";
 import HeaderInformation from "@/Components/Sections/HeaderInformation.vue";
@@ -18,6 +18,7 @@ import { router } from "@inertiajs/vue3";
 import { useToast } from "vue-toastification";
 import { formatNumber, formatDate } from "@/utils/global";
 import Autocomplete from "@/Components/Data/Autocomplete.vue";
+import ConnectedPurchaseRequests from "./ConnectedPurchaseRequests.vue";
 
 const modelName = "purchase-orders";
 const page = usePage();
@@ -26,7 +27,7 @@ const { buttonPrimaryBgColor, buttonPrimaryTextColor } = useColors();
 
 const isSuperAdmin = computed(() => {
     const roles = page.props.roles || [];
-    return roles.includes('super-admin');
+    return roles.includes("super-admin");
 });
 
 const headerActions = ref([
@@ -417,7 +418,15 @@ const loadPurchaseOrderDetails = async () => {
             axios.get(`/api/purchase-orders/${modelData.value.id}`),
         ]);
         purchaseOrderDetails.value = detailsResponse.data.data || [];
-        Object.assign(modelData.value, orderResponse.data);
+        // Object.assign(modelData.value, orderResponse.data);
+        const supplier = modelData.value.supplier;
+
+        // Safe merge
+        modelData.value = {
+            ...modelData.value,
+            ...orderResponse.data,
+            supplier, // Keep the original supplier and purchase_requests
+        };
     } catch (error) {
         console.error("Error loading purchase order details:", error);
         toast.error("Failed to load purchase order details");
@@ -787,6 +796,13 @@ onMounted(async () => {
                     :columns="profileDetails"
                     :columnsPerRow="3"
                 />
+                <!-- <ConnectedPurchaseRequests :supplier="modelData.supplier" /> -->
+                <!-- <ConnectedPurchaseRequests :supplier="modelData.supplier" :items="items" /> -->
+                <ConnectedPurchaseRequests
+                    :supplier="modelData.supplier"
+                    :items="items"
+                    :purchaseOrderId="modelData.id"
+                />
 
                 <div class="border-t border-gray-200 py-6">
                     <div class="px-6">
@@ -936,7 +952,10 @@ onMounted(async () => {
                                                     class="block w-16 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                 />
                                             </td>
-                                            <td v-if="isSuperAdmin" class="px-2 py-2">
+                                            <td
+                                                v-if="isSuperAdmin"
+                                                class="px-2 py-2"
+                                            >
                                                 <input
                                                     type="number"
                                                     v-model="item.price"
@@ -951,7 +970,10 @@ onMounted(async () => {
                                                     class="block w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                 />
                                             </td>
-                                            <td v-if="isSuperAdmin" class="px-2 py-2 text-gray-500">
+                                            <td
+                                                v-if="isSuperAdmin"
+                                                class="px-2 py-2 text-gray-500"
+                                            >
                                                 {{
                                                     calculateTotal(
                                                         item
@@ -1118,7 +1140,10 @@ onMounted(async () => {
                                             <td class="px-2 py-2">
                                                 {{ detail.free_qty }}
                                             </td>
-                                            <td v-if="isSuperAdmin" class="px-2 py-2">
+                                            <td
+                                                v-if="isSuperAdmin"
+                                                class="px-2 py-2"
+                                            >
                                                 {{
                                                     formatNumber(detail.price, {
                                                         style: "currency",
@@ -1126,7 +1151,10 @@ onMounted(async () => {
                                                     })
                                                 }}
                                             </td>
-                                            <td v-if="isSuperAdmin" class="px-2 py-2">
+                                            <td
+                                                v-if="isSuperAdmin"
+                                                class="px-2 py-2"
+                                            >
                                                 {{
                                                     formatNumber(detail.total, {
                                                         style: "currency",
@@ -1206,7 +1234,10 @@ onMounted(async () => {
                                 </table>
 
                                 <!-- Total Section -->
-                                <div v-if="isSuperAdmin" class="mt-4 flex justify-end px-2">
+                                <div
+                                    v-if="isSuperAdmin"
+                                    class="mt-4 flex justify-end px-2"
+                                >
                                     <div class="w-64 space-y-2">
                                         <div
                                             class="flex justify-between text-sm"
@@ -1454,7 +1485,9 @@ onMounted(async () => {
                             }}
                         </span>
                     </div>
-                    <p class="pl-2 pt-2 text-gray-900 font-semibold text-base whitespace-pre-wrap">
+                    <p
+                        class="pl-2 pt-2 text-gray-900 font-semibold text-base whitespace-pre-wrap"
+                    >
                         {{ remark.remarks }}
                     </p>
                 </div>
@@ -1478,9 +1511,7 @@ onMounted(async () => {
     >
         <div class="bg-white rounded-lg p-6 max-w-md w-full">
             <h3 class="text-lg font-medium text-gray-900 mb-4">
-                {{
-                    actionType.charAt(0).toUpperCase() + actionType.slice(1)
-                }}
+                {{ actionType.charAt(0).toUpperCase() + actionType.slice(1) }}
                 Purchase Order
             </h3>
 

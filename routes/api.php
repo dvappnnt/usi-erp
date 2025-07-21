@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AbstractOfCanvassApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -82,17 +83,21 @@ use App\Http\Controllers\Api\Modules\HumanResourceManagement\EmployeeSkillContro
 use App\Http\Controllers\Api\Modules\HumanResourceManagement\EmployeePerformanceReviewController;
 use App\Http\Controllers\Api\Modules\HumanResourceManagement\EmployeeLeaveController;
 use App\Http\Controllers\Api\Modules\HumanResourceManagement\EmployeeOvertimeController;
+use App\Http\Controllers\Api\Modules\RequisitionManagement\RequisitionVoucherController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 });
+Route::get('/aocs', [AbstractOfCanvassApiController::class, 'index']);
 
 Route::get('/all/countries', [CountryController::class, 'all'])->name('api.countries.all');
 Route::resource('countries', CountryController::class)->only(['index', 'show', 'destroy']);
 
 Route::as('api.')->middleware('auth:sanctum')->group(function () {
+     Route::get('/requisition-vouchers', [RequisitionVoucherController::class, 'index'])->name('requisition-vouchers.index');
+     
     Route::apiResource('users', UserController::class);
     Route::get('autocomplete/users', [UserController::class, 'autocomplete'])->name('users.autocomplete');
     Route::put('/users/update-password/{user}', [UserController::class, 'updatePassword'])->name('users.update-password');
@@ -222,6 +227,7 @@ Route::as('api.')->middleware('auth:sanctum')->group(function () {
     Route::get('autocomplete/purchase-orders', [PurchaseOrderController::class, 'autocomplete'])->name('purchase-orders.autocomplete');
     Route::get('purchase-orders/{purchaseOrder}/approval-levels', [PurchaseOrderController::class, 'approvalLevels'])->name('purchase-orders.approval-levels');
     Route::get('purchase-orders/{purchaseOrder}/approval-remarks', [PurchaseOrderController::class, 'approvalRemarks'])->name('purchase-orders.approval-remarks');
+    
 
     // Add nested route for purchase order details
     Route::group(['prefix' => 'purchase-orders/{purchaseOrder}'], function () {
@@ -426,4 +432,8 @@ Route::as('api.')->middleware('auth:sanctum')->group(function () {
     Route::post('account-types/{accountType}/restore', [AccountTypeController::class, 'restore'])->name('account-types.restore');
 
     Route::apiResource('warehouse-stock-transfer-serials', App\Http\Controllers\Api\Modules\WarehouseManagement\WarehouseStockTransferSerialController::class);
+
+    Route::get('/requisition-vouchers', [RequisitionVoucherController::class, 'index'])->name('requisition-vouchers.index');
+
+
 });
