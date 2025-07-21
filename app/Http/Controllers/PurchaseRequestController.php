@@ -36,9 +36,13 @@ class PurchaseRequestController extends Controller
     public function generatePRNumber()
     {
         $date = now()->format('Ymd');
-        $count = PurchaseRequest::whereDate('created_at', now()->toDateString())->count() + 1;
+        $count = PurchaseRequest::withTrashed()
+            ->whereDate('created_at', now()->toDateString())
+            ->count() + 1;
+
         return 'PR-' . $date . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
     }
+
 
     public function store(Request $request)
     {
@@ -64,9 +68,6 @@ class PurchaseRequestController extends Controller
             'pr_no' => $prNumber,
             'purpose' => $validated['purpose'] ?? null,
             'date' => $validated['date'],
-            // 'prepared_by' => $validated['prepared_by'] ?? null,
-            // 'approved_by' => $validated['approved_by'] ?? null,
-            // 'received_by' => $validated['received_by'] ?? null,
             'supplier_id' => $validated['supplier_id'],
         ]);
 
@@ -138,10 +139,11 @@ class PurchaseRequestController extends Controller
         return redirect()->route('purchase-requests.index')->with('success', 'Purchase Request updated successfully.');
     }
 
-
-    public function destroy(PurchaseRequest $purchaseRequest)
+    public function destroy($id)
     {
+        $purchaseRequest = PurchaseRequest::findOrFail($id);
         $purchaseRequest->delete();
+
         return redirect()->route('purchase-requests.index')->with('success', 'Purchase Request deleted successfully.');
     }
 }

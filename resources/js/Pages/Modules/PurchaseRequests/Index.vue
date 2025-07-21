@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import { useToast } from "vue-toastification";
 import { computed, ref } from "vue";
 import Swal from "sweetalert2";
@@ -10,6 +10,7 @@ import ViewOnlyModal from "@/Components/Form/ViewOnlyModal.vue";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { nextTick } from "vue";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 
 // Props from the backend
 const props = defineProps({
@@ -36,37 +37,40 @@ const headerActions = ref([
     },
 ]);
 
-// Delete Purchase Request
-const deleteRequest = (id) => {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "This action cannot be undone!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "Cancel",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            useForm().delete(route("purchase-requests.destroy", id), {
-                onSuccess: () =>
-                    toast.success("Purchase Request deleted successfully!"),
-                onError: () =>
-                    toast.error("Failed to delete purchase request."),
-            });
-        }
-    });
-};
-
 // View Purchase Request
 const showViewModal = ref(false);
-const selectedRequest = ref(null);
+const selectedRequest = ref({});
 
 const viewRequest = (request) => {
     selectedRequest.value = request;
     showViewModal.value = true;
 };
+// Delete Purchase Request
+const confirmingDelete = ref(false);
+
+const openDeleteModal = (request) => {
+    selectedRequest.value = request;
+    confirmingDelete.value = true;
+};
+
+const closeDeleteModal = () => {
+    confirmingDelete.value = false;
+    selectedRequest.value = {};
+};
+
+
+const confirmDelete = () => {
+    router.delete(route("purchase-requests.destroy", selectedRequest.value.id), {
+        onSuccess: () => {
+            toast.success("Purchase Request deleted successfully.");
+            closeDeleteModal();
+        },
+        onError: () => {
+            toast.error("Failed to delete Purchase Request.");
+        },
+    });
+};
+
 
 // Export to PDF
 
@@ -182,7 +186,7 @@ const exportToPDF = async (requestId) => {
                                         >Edit</Link
                                     >
                                     <button
-                                        @click="deleteRequest(request.id)"
+                                        @click="openDeleteModal(request)"
                                         class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
                                     >
                                         Delete
@@ -333,7 +337,7 @@ const exportToPDF = async (requestId) => {
                             </p>
                         </div>
                         <div>
-                             <p class="text-sm mb-2">
+                            <p class="text-sm mb-2">
                                 {{
                                     getSignatory("Approved By:").label ||
                                     "__________________________"
@@ -388,6 +392,30 @@ const exportToPDF = async (requestId) => {
             ]"
             @close="showViewModal = false"
         />
+        <ConfirmationModal :show="confirmingDelete" @close="closeDeleteModal">
+            <template #title> Delete Purchase Request </template>
+
+            <template #content>
+                Are you sure you want to delete PR
+                <strong>{{ selectedRequest?.pr_no }}</strong
+                >? This action cannot be undone.
+            </template>
+
+            <template #footer>
+                <button
+                    @click="closeDeleteModal"
+                    class="px-4 py-2 bg-gray-300 rounded me-2"
+                >
+                    Cancel
+                </button>
+                <button
+                    @click="confirmDelete"
+                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                >
+                    Confirm
+                </button>
+            </template>
+        </ConfirmationModal>
     </AppLayout>
 </template>
 

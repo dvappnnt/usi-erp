@@ -54,6 +54,7 @@ use App\Http\Controllers\Modules\HumanResourceManagement\DeductionController;
 use App\Http\Controllers\Modules\HumanResourceManagement\DocumentTypeController;
 use App\Http\Controllers\Modules\RequisitionManagement\RequisitionVoucherController;
 use App\Http\Controllers\PurchaseRequestController;
+use App\Http\Controllers\RFQController;
 use App\Http\Controllers\SignatoryController;
 
 Route::get('/', function () {
@@ -112,6 +113,13 @@ Route::middleware([
 
 
     Route::resource('aocs', AbstractOfCanvassController::class);
+    Route::resource('rfqs', RFQController::class);
+    Route::get('/rfq/fetch-pr/{id}', [RFQController::class, 'fetchPR']);
+    Route::get('/rfq/fetch-supplier-products/{id}', [RFQController::class, 'fetchSupplierProducts']);
+    Route::post('/rfqs/{id}/send-email', [RFQController::class, 'sendEmail'])->name('rfqs.sendEmail');
+
+
+
 
 
 

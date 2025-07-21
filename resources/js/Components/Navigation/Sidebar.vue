@@ -385,7 +385,7 @@
                             hasPermission('read companies') ||
                             hasPermission('read purchase orders') ||
                             hasPermission('read purchase requests') ||
-                              hasPermission('read abstract of canvass') ||
+                            hasPermission('read abstract of canvass') ||
                             hasPermission('read requisition vouchers') ||
                             hasPermission('read goods receipts') ||
                             hasPermission('read warehouses') ||
@@ -453,6 +453,33 @@
                         ></span>
                         <span v-show="!isMinimized" class="ml-3">
                             Abstract of Canvass
+                        </span>
+                    </Link>
+                    <Link
+                        v-if="hasPermission('read rfqs')"
+                        :href="route('rfqs.index')"
+                        :class="[
+                            'flex items-center px-4 py-2 rounded-lg transition-colors',
+                            route().current()?.startsWith('rfqs.')
+                                ? 'active-link'
+                                : 'hover:bg-gray-100',
+                        ]"
+                        :style="
+                            route().current()?.startsWith('rfqs.')
+                                ? activeStyles
+                                : sidebarTextStyle
+                        "
+                    >
+                        <span
+                            class="mdi mdi-file-document-multiple-outline text-xl"
+                            :style="
+                                route().current()?.startsWith('rfqs.')
+                                    ? { color: activeTextColor }
+                                    : sidebarTextStyle
+                            "
+                        ></span>
+                        <span v-show="!isMinimized" class="ml-3">
+                            Request for Quotation
                         </span>
                     </Link>
 

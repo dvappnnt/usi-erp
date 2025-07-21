@@ -20,6 +20,7 @@ class RoleSeeder extends Seeder
         $this->assignSuperAdminPermissions();
         $this->createSignatoriesPermissions();
         $this->createAocsPermissions();
+        $this->createRfqPermissions();
     }
 
     /**
@@ -258,4 +259,29 @@ class RoleSeeder extends Seeder
             ]);
         }
     }
+    private function createRfqPermissions(): void
+    {
+        $permissions = [
+                'read rfqs',
+                'create rfqs',
+                'update rfqs',
+                'delete rfqs',
+                'restore rfqs',
+                'read rfq items',
+                'create rfq items',
+                'update rfq items',
+                'delete rfq items',
+                'restore rfq items',
+                
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+     
+    
 }

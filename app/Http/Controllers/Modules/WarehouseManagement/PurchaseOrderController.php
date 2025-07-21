@@ -30,27 +30,6 @@ class PurchaseOrderController extends Controller
     {
         return Inertia::render("{$this->modulePath}/{$this->modelName}/Create");
     }
-
-    // public function show($id)
-    // {
-    //     $model = $this->modelClass::with(['company', 'warehouse', 'supplier'])->findOrFail($id);
-
-    //     return Inertia::render("{$this->modulePath}/{$this->modelName}/Show", [
-    //         'modelData' => $model,
-    //     ]);
-    // }
-    // public function show($id)
-    // {
-    //     $model = $this->modelClass::with([
-    //         'company',
-    //         'warehouse',
-    //         'supplier.purchaseRequests.items.product', // include connected purchase requests
-    //     ])->findOrFail($id);
-
-    //     return Inertia::render("{$this->modulePath}/{$this->modelName}/Show", [
-    //         'modelData' => $model,
-    //     ]);
-    // }
     public function show($id)
     {
         $model = $this->modelClass::with([
